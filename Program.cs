@@ -6,6 +6,7 @@ namespace lz4cmd;
 
 public class Program
 {
+    const string version = "1.0.0.2";
     public static void Main(string[] args)
     {
         try
@@ -20,17 +21,21 @@ public class Program
 
     static bool PrintSyntax()
     {
-        Console.WriteLine("Compress:");
-        Console.WriteLine("\t Syntax: lz4 [INFILE [OUTFILE]]");
-        Console.WriteLine("Decompress:");
-        Console.WriteLine("\t Syntax: lz4 -d [INFILE [OUTFILE]]");
-        Console.WriteLine("INFILE and OUTFILE can be - for standard in and standard out.");
+        Console.WriteLine($"lz4cmd v{version} Yung, Chun Kau; yung.chun.kau@gmail.com");
+        Console.WriteLine($"""
+            Compress:
+              lz4cmd INFILE OUTFILE
+            Decompress:
+              lz4cmd -d INFILE OUTFILE
+            INFILE and OUTFILE can be - for standard in and standard out.
+            If INFILE or OUTFILE is skipped, - would be taken.
+            """);
         return false;
     }
 
     static bool PrintTooSimple()
     {
-        Console.WriteLine("Run 'lz4 -?' for help");
+        Console.WriteLine("Run 'lz4cmd -?' for help");
         return false;
     }
 
