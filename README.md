@@ -18,3 +18,4 @@ lz4cmd -d INFILE OUTFILE
 
 ## Copyright
 Yung, Chun Kau (yung.chun.kau@gmail.com) 2022 December
+yung.chun.kau@gmail.com

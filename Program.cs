@@ -1,12 +1,21 @@
 using IonKiwi.lz4;
 using System;
 using System.IO.Compression;
+using System.Reflection;
 
 namespace lz4cmd;
 
 public class Program
 {
-    const string version = "1.0.0.2";
+    static string ExeName { get; }
+    static string ExeVersion { get; }
+    static Program()
+    {
+        var asm = Assembly.GetEntryAssembly()?.GetName();
+        ExeName = asm?.Name ?? "?";
+        ExeVersion = asm?.Version?.ToString() ?? "?";
+    }
+
     public static void Main(string[] args)
     {
         try
@@ -21,7 +30,7 @@ public class Program
 
     static bool PrintSyntax()
     {
-        Console.WriteLine($"lz4cmd v{version} Yung, Chun Kau; yung.chun.kau@gmail.com");
+        Console.WriteLine($"{ExeName} v{ExeVersion} Yung, Chun Kau; yung.chun.kau@gmail.com");
         Console.WriteLine($"""
             Compress:
               lz4cmd INFILE OUTFILE
@@ -35,7 +44,7 @@ public class Program
 
     static bool PrintTooSimple()
     {
-        Console.WriteLine("Run 'lz4cmd -?' for help");
+        Console.WriteLine($"Run '{ExeName} -?' for help");
         return false;
     }
 
@@ -43,12 +52,15 @@ public class Program
 
     static bool RunMain(string[] mainArgs)
     {
-        if (mainArgs.Contains("-?") || mainArgs.Contains("-h"))
+        if (mainArgs.Contains("-?") ||
+            mainArgs.Contains("-h") ||
+            mainArgs.Contains("--help"))
         {
             return PrintSyntax();
         }
 
-        var aa = mainArgs.GroupBy((it) => it.Equals("-d"))
+        var aa = mainArgs.GroupBy(
+            (it) => it.Equals("-d") || it.Equals("--decompress"))
             .ToDictionary((it) => it.Key, (it) => it);
 
         string[] args;
@@ -144,6 +156,7 @@ public class Program
         inputClose(inpFile);
         return true;
     }
+
     static bool Decompress(Stream inpFile, Action<Stream> inputClose,
         Stream outFile, Action<Stream> outputClose)
     {
