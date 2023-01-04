@@ -2,6 +2,7 @@ using IonKiwi.lz4;
 using System;
 using System.IO.Compression;
 using System.Reflection;
+using System.Text;
 
 namespace lz4cmd;
 
@@ -104,14 +105,14 @@ public class Program
 
         return (args[0], args[1]) switch
         {
-            (shortConsole, shortConsole) => funcThe(Console.OpenStandardInput(), NoClose, 
-                Console.OpenStandardOutput(), NoClose),
+            (shortConsole, shortConsole) => funcThe(GetConsoleInput(), NoClose,
+                GetConsoleOutput(), NoClose),
 
-            (shortConsole, string) => funcThe(Console.OpenStandardInput(), NoClose,
+            (shortConsole, string) => funcThe(GetConsoleInput(), NoClose,
                 File.Create(args[1]), CommonCloseFile),
 
             (string, shortConsole) => funcThe(File.OpenRead(args[0]), CommonCloseFile,
-                Console.OpenStandardOutput(), NoClose),
+                GetConsoleOutput(), NoClose),
 
             _ => funcThe( File.OpenRead(args[0]), CommonCloseFile,
                 File.Create(args[1]), CommonCloseFile)
@@ -193,5 +194,19 @@ public class Program
         outputClose(outFile);
         inputClose(inpFile);
         return true;
+    }
+
+    static readonly Encoding Encoding8859 = Encoding.GetEncoding("ISO-8859-1");
+
+    static Stream GetConsoleInput()
+    {
+        Console.InputEncoding = Encoding8859;
+        return Console.OpenStandardInput();
+    }
+
+    static Stream GetConsoleOutput()
+    {
+        Console.OutputEncoding = Encoding8859;
+        return Console.OpenStandardOutput();
     }
 }
