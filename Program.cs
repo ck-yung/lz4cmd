@@ -34,11 +34,14 @@ public class Program
         Console.WriteLine($"{ExeName} v{ExeVersion} Yung, Chun Kau; yung.chun.kau@gmail.com");
         Console.WriteLine($"""
             Compress:
-              lz4cmd INFILE OUTFILE
+              lz4cmd INFILE OUTFILE [OPTION]
             Decompress:
-              lz4cmd -d INFILE OUTFILE
+              lz4cmd -d INFILE OUTFILE [OPTION]
             INFILE and OUTFILE can be - for standard in and standard out.
             If INFILE or OUTFILE is skipped, - would be taken.
+            OPTION:
+              -b  NUMBER-OF-1K-BLOCK
+            The default value of NUMBER-OF-1K-BLOCK is 4096.
             """);
         return false;
     }
@@ -51,6 +54,50 @@ public class Program
 
     const string shortConsole = "-";
 
+    static int CountOfBlock = 4096;
+    static IEnumerable<string> GetNumberOf1kBlock(
+        IEnumerable<string> args)
+    {
+        var it = args.GetEnumerator();
+        while (it.MoveNext())
+        {
+            var current = it.Current;
+            if ("-b" == current)
+            {
+                if (it.MoveNext())
+                {
+                    current = it.Current;
+                    if (int.TryParse(current, out int cntBlock))
+                    {
+                        if (cntBlock > 0)
+                        {
+                            CountOfBlock = cntBlock;
+                        }
+                        else
+                        {
+                            throw new ArgumentException(
+                                $"Value to '-b' should be positive number, but {current} is found.");
+                        }
+                    }
+                    else
+                    {
+                        throw new ArgumentException(
+                            $"Value '{current}' is bad to '-b'");
+                    }
+                }
+                else
+                {
+                    throw new ArgumentException(
+                        "Value is required to '-b'");
+                }
+            }
+            else
+            {
+                yield return current;
+            }
+        }
+    }
+
     static bool RunMain(string[] mainArgs)
     {
         if (mainArgs.Contains("-?") ||
@@ -60,7 +107,7 @@ public class Program
             return PrintSyntax();
         }
 
-        var aa = mainArgs.GroupBy(
+        var aa = GetNumberOf1kBlock(mainArgs.AsEnumerable()).GroupBy(
             (it) => it.Equals("-d") || it.Equals("--decompress"))
             .ToDictionary((it) => it.Key, (it) => it);
 
@@ -122,11 +169,11 @@ public class Program
     static bool Compress(Stream inpFile, Action<Stream> inputClose,
         Stream outFile, Action<Stream> outputClose)
     {
-        const int SIZE = 4 * 1024 * 1024;
+        Console.Error.WriteLine($"Number of 1-Kb block is {CountOfBlock}");
+        var SIZE = CountOfBlock * 1024;
         var buffer1 = new byte[SIZE];
         var buffer2 = new byte[SIZE];
         bool isBuffer1 = true;
-
         using (LZ4Stream lz4file = LZ4Stream.CreateCompressor(
             outFile, LZ4StreamMode.Write, LZ4FrameBlockMode.Linked,
             LZ4FrameBlockSize.Max4MB, LZ4FrameChecksumMode.Content))
@@ -161,7 +208,8 @@ public class Program
     static bool Decompress(Stream inpFile, Action<Stream> inputClose,
         Stream outFile, Action<Stream> outputClose)
     {
-        const int SIZE = 4 * 1024 * 1024;
+        Console.Error.WriteLine($"Number of 1-Kb block is {CountOfBlock}");
+        var SIZE = CountOfBlock * 1024;
         var buffer1 = new byte[SIZE];
         var buffer2 = new byte[SIZE];
         bool isBuffer1 = true;
