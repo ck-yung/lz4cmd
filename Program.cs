@@ -1,6 +1,4 @@
 using IonKiwi.lz4;
-using System;
-using System.IO.Compression;
 using System.Reflection;
 using System.Text;
 
@@ -148,6 +146,16 @@ public class Program
         {
             Console.WriteLine($"Output file '{args[1]}' ALREADY exists!");
             return false;
+        }
+
+        if (args[0] == shortConsole)
+        {
+            Console.InputEncoding = Encoding.GetEncoding("ISO-8859-1");
+        }
+
+        if (args[1] == shortConsole)
+        {
+            Console.OutputEncoding = Encoding.GetEncoding("ISO-8859-1");
         }
 
         return (args[0], args[1]) switch
