@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <AssemblyName>lz4cmd</AssemblyName>
@@ -14,12 +14,12 @@
     <PackAsTool>True</PackAsTool>
     <PackageProjectUrl>https://github.com/ck-yung/lz4cmd</PackageProjectUrl>
     <RepositoryUrl>https://github.com/ck-yung/lz4cmd</RepositoryUrl>
-    <AssemblyVersion>1.0.0.3</AssemblyVersion>
-    <FileVersion>1.0.0.3</FileVersion>
+    <AssemblyVersion>1.0.1.0</AssemblyVersion>
+    <FileVersion>1.0.1.0</FileVersion>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <PackageLicenseFile>LICENSE</PackageLicenseFile>
     <PackageReadmeFile>README.md</PackageReadmeFile>
-    <Version>1.0.0.3</Version>
+    <Version>1.0.1.0</Version>
   </PropertyGroup>
 
   <ItemGroup>

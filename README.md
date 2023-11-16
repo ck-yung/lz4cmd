@@ -21,8 +21,8 @@ lz4cmd -d INFILE OUTFILE
 * LZ4.NET is created by Ewout van der Linden (https://github.com/IonKiwi/lz4.managed) and is contributed by Bar Arnon.
 
 ## Copyright
-v1.0.0.3
+v1.0.1.0
 
-Yung, Chun Kau (yung.chun.kau@gmail.com) 2023 Jan
+Yung, Chun Kau (yung.chun.kau@gmail.com) 2023 Nov
 
 yung.chun.kau@gmail.com

@@ -105,6 +105,11 @@ public class Program
             return PrintSyntax();
         }
 
+        if (mainArgs.Contains("--version"))
+        {
+            return PrintExeVersion();
+        }
+
         var aa = GetNumberOf1kBlock(mainArgs.AsEnumerable()).GroupBy(
             (it) => it.Equals("-d") || it.Equals("--decompress"))
             .ToDictionary((it) => it.Key, (it) => it);
@@ -264,5 +269,22 @@ public class Program
     {
         Console.OutputEncoding = Encoding8859;
         return Console.OpenStandardOutput();
+    }
+
+    static bool PrintExeVersion()
+    {
+        var asm = Assembly.GetExecutingAssembly();
+        var asmName = asm.GetName();
+        var ExeName = asmName.Name ?? "?";
+        var ExeVersion = asmName.Version?.ToString() ?? "?";
+        var ExeCopyright = "?";
+        var aa = asm.GetCustomAttributes(typeof(AssemblyCopyrightAttribute),
+            inherit: false);
+        if (aa.Length > 0)
+        {
+            ExeCopyright = ((AssemblyCopyrightAttribute)aa[0]).Copyright;
+        }
+        Console.WriteLine($"{ExeName} v{ExeVersion} {ExeCopyright}");
+        return false;
     }
 }
